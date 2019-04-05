@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.version     = Pshr::VERSION
   spec.authors     = ["Paul Bernhard"]
   spec.email       = ["mail@pbernhard.com"]
-  spec.homepage    = "github.com/paulbernhard/pshr"
+  spec.homepage    = "http://github.com/paulbernhard/pshr"
   spec.summary     = "pshr - Rails engine for polymorphic uploads (using shrine) with an uploader interface."
   spec.description = "pshr - Rails engine for polymorphic uploads (using shrine) with an uploader interface."
   spec.license     = "MIT"
@@ -34,6 +34,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'redis', '~> 4.1' # redis memory server for background jobs
   spec.add_dependency 'sidekiq', '~> 5.2', '>= 5.2.5' # sidekiq background jobs
   spec.add_dependency 'image_processing', '~> 1.8' # processing wrapper for minimagick/vips
+
+  spec.add_dependency 'ranked-model', '~> 0.4.4' # ordering of upload records
 
   spec.add_development_dependency 'pg'
 end
