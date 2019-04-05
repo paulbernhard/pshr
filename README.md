@@ -1,28 +1,26 @@
-# Pshr
-Short description and motivation.
-
-## Usage
-How to use my plugin.
+# pshr
+An engine for Ruby on Rails to provide polymorphic uploads (using [shrine](https://github.com/shrinerb/shrine)) with file processing and an uploader interface.
 
 ## Installation
-Add this line to your application's Gemfile:
+Add pshr to your Gemfile…
 
 ```ruby
 gem 'pshr'
 ```
 
-And then execute:
+… and bundle install.
 ```bash
 $ bundle
 ```
 
-Or install it yourself as:
+Or install yourself as:
 ```bash
 $ gem install pshr
 ```
 
-## Contributing
-Contribution directions go here.
+## Setup
+
+## Usage
 
 ## License
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
