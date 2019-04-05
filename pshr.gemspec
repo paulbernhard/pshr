@@ -38,4 +38,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'ranked-model', '~> 0.4.4' # ordering of upload records
 
   spec.add_development_dependency 'pg'
+  spec.add_development_dependency 'byebug', '~> 11.0', '>= 11.0.1'
 end

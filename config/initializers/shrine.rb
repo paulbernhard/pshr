@@ -22,7 +22,8 @@ Shrine.plugin :store_dimensions, analyzer: :ruby_vips # store dimensions in file
 Shrine.plugin :delete_promoted # delete file after promotion
 Shrine.plugin :delete_raw unless (Rails.env.development? || Rails.env.test?) # delete raw file after upload
 Shrine.plugin :remove_invalid # delete invalid files
-# Shrine.plugin :versions # create versions
-# Shrine.plugin :processing # process uploaded files
+Shrine.plugin :versions # create versions
+Shrine.plugin :processing # process uploaded files
 # Shrine.plugin :backgrounding # process in background job
 # Shrine.plugin :upload_endpoint # endpoint for XHR uploads
+# Shrine.plugin :hooks # callbacks

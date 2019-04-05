@@ -17,7 +17,7 @@ ActiveRecord::Schema.define(version: 2019_04_05_082007) do
 
   create_table "pshr_uploads", force: :cascade do |t|
     t.text "file_data"
-    t.jsonb "metadata"
+    t.jsonb "metadata", default: {}
     t.integer "order"
     t.boolean "processing", default: false
     t.string "uploadable_type"

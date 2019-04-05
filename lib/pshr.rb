@@ -1,4 +1,5 @@
-require "pshr/engine"
+require 'pshr/engine'
+require 'byebug'
 
 module Pshr
   
