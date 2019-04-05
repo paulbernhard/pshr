@@ -1,7 +1,5 @@
 module Pshr
   class Upload < ApplicationRecord
-    belongs_to :uploadable, polymorphic: true
-
-    
+    include Pshr::Uploadable
   end
 end
