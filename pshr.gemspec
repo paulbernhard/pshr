@@ -10,8 +10,8 @@ Gem::Specification.new do |spec|
   spec.authors     = ["Paul Bernhard"]
   spec.email       = ["mail@pbernhard.com"]
   spec.homepage    = "github.com/paulbernhard/pshr"
-  spec.summary     = "pshr - Backend structure for polymorphic uploads (using shrine) with an uploader interface."
-  spec.description = "pshr - Backend structure for polymorphic uploads (using shrine) with an uploader interface."
+  spec.summary     = "pshr - Rails engine for polymorphic uploads (using shrine) with an uploader interface."
+  spec.description = "pshr - Rails engine for polymorphic uploads (using shrine) with an uploader interface."
   spec.license     = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
