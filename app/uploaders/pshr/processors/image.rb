@@ -1,9 +1,8 @@
 require 'image_processing/vips'
 
 module Pshr::Processors::Image
-  
-  def self.process(file, mime_type = nil)
-    debugger
+
+  def self.process(file)
     pipeline = ImageProcessing::Vips
       .source(file)
 

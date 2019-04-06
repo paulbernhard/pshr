@@ -26,14 +26,14 @@ module Pshr
 
     class_methods do
       # accessor for custom settings
-      attr_accessor :pshr_processor, :pshr_whitelist, :pshr_max_file_size
+      attr_accessor :pshr_processors, :pshr_whitelist, :pshr_max_file_size
 
       # custom settings for pshr
       # pshr_with(processor: 'Pshr::Processor',
       #           whitelist: %W(image/jpeg, image/png),
       #           max_file_size: 1.megabyte)
       def pshr_with(options = {})
-        self.pshr_processor = options[:processor] if options[:processor]
+        self.pshr_processors = options[:processors] if options[:processors]
         self.pshr_whitelist = options[:whitelist] if options[:whitelist]
         self.pshr_max_file_size = options[:max_file_size] if options[:max_file_size]
       end

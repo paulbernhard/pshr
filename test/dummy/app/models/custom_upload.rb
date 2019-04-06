@@ -3,10 +3,10 @@ class CustomUpload < ApplicationRecord
   include Pshr::Uploadable
 
   # set uploading options
-  # pshr_with(processor: 'Pshr::Processor',
+  # pshr_with(processors: {},
   #           whitelist: %W(image/jpeg, image/png),
   #           max_file_size: 1.megabyte)
-  pshr_with processor: 'CustomProcessor',
+  pshr_with processors: { image: 'Processors::CustomImage' },
             whitelist: %W(image/jpeg image/jpg image/png video/mp4),
             max_file_size: 200.kilobytes
 end

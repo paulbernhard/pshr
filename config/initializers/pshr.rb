@@ -13,8 +13,10 @@ Pshr.setup do |config|
   # config.image_processing = false
   # config.video_processing = false
 
-  # set a custom processor
-  # config.processor = 'Pshr::Processor'
+  # set a custom processor with hash
+  # for example { image: 'Pshr::Processors::Image', video: 'Processors::Video' }
+  # fale disables processing
+  # config.processors = false
 
   # process files in background job (requires a redis server and sidekiq!)
   # config.process_in_background = false

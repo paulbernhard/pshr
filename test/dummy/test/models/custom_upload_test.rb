@@ -17,13 +17,8 @@ class CustomUploadTest < ActiveSupport::TestCase
   end
 
   test 'uses custom processor' do
-    image_processing = Pshr.image_processing
-    Pshr.image_processing = true
-
     @upload.file = File.open(file_fixture('image.jpg'))
     @upload.save
     assert_equal "image/png", @upload.mime_type
-
-    Pshr.image_processing = image_processing
   end
 end

@@ -9,14 +9,14 @@ Pshr.setup do |config|
   # config.uploads_store_prefix = "uploads/store"
 
   # enable processing for image, video, etc
-  config.image_processing = true
+  # config.image_processing = true
   # config.video_processing = false
 
   # set a custom processor (you can include Pshr::Processor in your processor)
   # config.processor = 'Pshr::Processor'
 
   # process files in background job
-  config.process_in_background = true
+  # config.process_in_background = true
 
   # validation for allowed filetypes (as array of mime-types)
   # config.whitelist = %W(image/jpg image/jpeg image/png image/gif video/quicktime video/mp4)

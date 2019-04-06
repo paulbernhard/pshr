@@ -48,18 +48,20 @@ class UploadTest < ActiveSupport::TestCase
   end
 
   test 'file processing' do
-    image_processing = Pshr.image_processing
+    # keep original settings
+    processors = Pshr.processors
 
     @upload.file = File.open(file_fixture('image.jpg'))
     @upload.save
     assert_not @upload.file.is_a?(Hash)
 
-    Pshr.image_processing = true
+    Pshr.processors = { image: 'Pshr::Processors::Image' }
     @upload.file = File.open(file_fixture('image.jpg'))
     @upload.save
     assert @upload.file.is_a?(Hash)
 
-    Pshr.image_processing = image_processing
+    # restore original setting
+    Pshr.processors = processors
   end
 
   test 'is ranked' do

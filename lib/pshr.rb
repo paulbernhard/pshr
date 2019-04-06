@@ -1,5 +1,4 @@
 require 'pshr/engine'
-require 'sidekiq' if Pshr.process_in_background
 require 'byebug' if (Rails.env.test? || Rails.env.development?)
 
 module Pshr
@@ -16,12 +15,13 @@ module Pshr
     mattr_accessor :uploads_store_prefix
     self.uploads_store_prefix = "uploads/store"
 
-    mattr_accessor :image_processing, :video_processing
-    self.image_processing = false
-    self.video_processing = false
+    # mattr_accessor :image_processing, :video_processing
+    # self.image_processing = false
+    # self.video_processing = false
 
-    mattr_accessor :processor
-    self.processor = 'Pshr::Processor'
+    mattr_accessor :processors
+    self.processors = false
+    # self.processor = 'Pshr::Processor'
 
     # TODO processing for audio files
     # TODO processing for document files

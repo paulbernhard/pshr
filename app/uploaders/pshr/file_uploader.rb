@@ -1,3 +1,5 @@
+require 'sidekiq' if Pshr.process_in_background
+
 module Pshr
   class FileUploader < Shrine
 
@@ -27,27 +29,23 @@ module Pshr
       # conditional processing if processing is enabled for type (image, video, …)
       # using Pshr::Processor or a processor defined by Upload model
       type = io.mime_type.split('/')[0]
-      processor = context[:record].class.pshr_processor ? context[:record].class.pshr_processor : Pshr.processor
-      output = conditional_processing(io, type, processor)
-      output
+      processors = context[:record].class.pshr_processors ? context[:record].class.pshr_processors : Pshr.processors
+      if processors && processors[type.to_sym]
+        processor = processors[type.to_sym]
+        download_and_process(io, processor)
+      else
+        io
+      end
+      # output = conditional_processing(io, type, processor)
+      # output
     end
 
     private
 
-      # return processed file based on type
-      # or just io if processing is disabled
-      def conditional_processing(io, type, processor)
-        if Pshr.send("#{type}_processing")
-          download_and_process(io, type, processor)
-        else
-          io
-        end
-      end
-
-      def download_and_process(io, type, processor)
+      def download_and_process(io, processor)
         output = nil
         io.download do |file|
-          output = processor.constantize.send("process_#{type}", file)
+          output = processor.constantize.process(file)
         end
         output
       end
