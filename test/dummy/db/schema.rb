@@ -10,21 +10,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_05_082007) do
+ActiveRecord::Schema.define(version: 2019_04_06_120457) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "pshr_uploads", force: :cascade do |t|
+  create_table "custom_uploads", force: :cascade do |t|
     t.text "file_data"
     t.jsonb "metadata", default: {}
     t.integer "order"
-    t.boolean "processing", default: false
+    t.boolean "processing"
     t.string "uploadable_type"
     t.bigint "uploadable_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["uploadable_type", "uploadable_id"], name: "index_pshr_uploads_on_uploadable_type_and_uploadable_id"
+    t.index ["uploadable_type", "uploadable_id"], name: "index_custom_uploads_on_uploadable_type_and_uploadable_id"
+  end
+
+  create_table "uploads", force: :cascade do |t|
+    t.text "file_data"
+    t.jsonb "metadata", default: {}
+    t.integer "order"
+    t.boolean "processing"
+    t.string "uploadable_type"
+    t.bigint "uploadable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["uploadable_type", "uploadable_id"], name: "index_uploads_on_uploadable_type_and_uploadable_id"
   end
 
 end

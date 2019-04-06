@@ -5,21 +5,38 @@ module Pshr
     extend ActiveSupport::Concern
 
     included do
-      # associations
+      # include shrine functionality and set defaults
+      include Pshr::FileUploader::Attachment.new(:file)
+      # self.pshr_processor = Pshr.processor
+      # self.pshr_whitelist = Pshr.whitelist
+      # self.pshr_max_file_size = Pshr.max_file_size
+
+      # include ranking functionality
+      include RankedModel
+      ranks :order, with_same: [:uploadable_id, :uploadable_type]
+
       belongs_to :uploadable, polymorphic: true, optional: true
 
-      # include shrine
-      include Pshr::FileUploader::Attachment.new(:file)
-
-      # validation
       validates :file, presence: true
 
-      # hooks
       before_save :set_processing_state, :set_mime_type
 
-      # ranking of uploads rows within associated parent
-      include RankedModel
-      ranks :order, with_same: [:uploadable_type, :uploadable_id]
+      scope :ordered, -> { rank(:order) }
+    end
+
+    class_methods do
+      # accessor for custom settings
+      attr_accessor :pshr_processor, :pshr_whitelist, :pshr_max_file_size
+
+      # custom settings for pshr
+      # pshr_with(processor: 'Pshr::Processor',
+      #           whitelist: %W(image/jpeg, image/png),
+      #           max_file_size: 1.megabyte)
+      def pshr_with(options = {})
+        self.pshr_processor = options[:processor] if options[:processor]
+        self.pshr_whitelist = options[:whitelist] if options[:whitelist]
+        self.pshr_max_file_size = options[:max_file_size] if options[:max_file_size]
+      end
     end
 
     def mime_type
@@ -28,6 +45,10 @@ module Pshr
 
     def type
       self.mime_type.split('/')[0]
+    end
+
+    def hello
+      puts "hi"
     end
 
     private
@@ -42,7 +63,8 @@ module Pshr
 
       # sync with mime-type of file or first version
       def set_mime_type
-        file = self.file.is_a?(Hash) ? self.file.first : self.file
+        self.metadata = {} if self.metadata.nil?
+        file = self.file.is_a?(Hash) ? self.file[self.file.keys.first] : self.file
         self.metadata['mime_type'] = file.mime_type
       end
   end

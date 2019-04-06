@@ -9,6 +9,8 @@ module Pshr
         # include controller methods with 'include Skrw::Concerns::ApplicationController'
         # include view helpers with 'helper Pshr::UploadHelper'
         # …
+
+        helper Pshr::UploadHelper
       end
     end
   end

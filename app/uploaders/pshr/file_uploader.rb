@@ -1,15 +1,20 @@
 module Pshr
   class FileUploader < Shrine
 
-    # validation
+    # file validation based on initializer settings or
+    # custom model settings
     plugin :validation_helpers, default_messages: {
       mime_type_inclusion: -> (whitelist) { I18n.t('shrine.errors.mime_type', whitelist: whitelist.join(', ')) },
       max_size: -> (max) { I18n.t('shrine.errors.max_size', max: max / 1048576.0) }
     }
 
     Attacher.validate do
-      validate_mime_type_inclusion Pshr.whitelist
-      validate_max_size Pshr.max_upload_size if Pshr.max_upload_size
+      # validate with model validation settings
+      whitelist = record.class.pshr_whitelist ? record.class.pshr_whitelist : Pshr.whitelist
+      max_file_size = record.class.pshr_max_file_size ? record.class.pshr_max_file_size : Pshr.max_file_size
+
+      validate_mime_type_inclusion whitelist if whitelist
+      validate_max_size max_file_size if max_file_size
     end
 
     # processing in background job
@@ -18,27 +23,33 @@ module Pshr
       # Attacher.delete { |data| Pshr::DeleteJob.perform_async(data) }
     end
 
-    # processing dependent on mime-type
-    # can return a hash for versions or single file
     process(:store) do |io, context|
-      
-      output = io # return io without processing
+      # conditional processing if processing is enabled for type (image, video, …)
+      # using Pshr::Processor or a processor defined by Upload model
       type = io.mime_type.split('/')[0]
+      processor = context[:record].class.pshr_processor ? context[:record].class.pshr_processor : Pshr.processor
+      output = conditional_processing(io, type, processor)
+      output
+    end
 
-      if type == 'image' && Pshr.image_processing
+    private
 
-        io.download do |file|
-          output = Pshr::Processors::Image.process(file, io.mime_type)
-        end
-
-      elsif type == 'video' && Pshr.video_processing
-
-        io.download do |file|
-          output = Pshr::Processors::Video.process(file, io.mime_type)
+      # return processed file based on type
+      # or just io if processing is disabled
+      def conditional_processing(io, type, processor)
+        if Pshr.send("#{type}_processing")
+          download_and_process(io, type, processor)
+        else
+          io
         end
       end
 
-      output
-    end
+      def download_and_process(io, type, processor)
+        output = nil
+        io.download do |file|
+          output = processor.constantize.send("process_#{type}", file)
+        end
+        output
+      end
   end
 end
