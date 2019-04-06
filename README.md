@@ -46,7 +46,27 @@ end
 ```bash
 $ rails g model Upload file_data:text metadata:jsonb order:integer processing:boolean uploadable:references{polymorphic}
 ```
-- hook upload model to a parent model with
+- hook `Pshr::Uploadable` into model:
+```ruby
+class Upload < ApplicationRecord
+  include Pshr::Uploadable
+end
+```
+- some settings can be customized on a per-model basis. To use a custom processor and file validations:
+```ruby
+class CustomUpload < ApplicationRecord
+  # include Uploadable
+  include Pshr::Uploadable
+
+  # set uploading options
+  # pshr_with(processor: 'CustomUploader',
+  #           whitelist: %W(image/jpeg, image/png),
+  #           max_file_size: 1.megabyte)
+  pshr_with processor: 'CustomProcessor',
+            whitelist: %W(image/jpeg image/jpg image/png video/mp4),
+            max_file_size: 200.kilobytes
+end
+```
 
 ```ruby
 class Post < ApplicationRecord
@@ -56,7 +76,8 @@ end
 
 ## Processing
 - enable processing in initializer
-- use a custom processor (per model)
+- use a global custom processor or a custom processor per model
+- override processing methods `process_image(file)`, etc
 
 ## Usage
 
