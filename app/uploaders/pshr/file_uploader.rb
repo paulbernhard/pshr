@@ -19,8 +19,8 @@ module Pshr
 
     # processing in background job
     if Pshr.process_in_background
-      # Attacher.promote { |data| Pshr::PromoteJob.perform_async(data) }
-      # Attacher.delete { |data| Pshr::DeleteJob.perform_async(data) }
+      Attacher.promote { |data| Pshr::PromoteJob.perform_async(data) }
+      Attacher.delete { |data| Pshr::DeleteJob.perform_async(data) }
     end
 
     process(:store) do |io, context|

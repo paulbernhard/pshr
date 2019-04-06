@@ -1,5 +1,6 @@
 require 'pshr/engine'
-require 'byebug'
+require 'sidekiq' if Pshr.process_in_background
+require 'byebug' if (Rails.env.test? || Rails.env.development?)
 
 module Pshr
 
