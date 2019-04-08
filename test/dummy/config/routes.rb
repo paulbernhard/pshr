@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
-  resources :posts
   mount Pshr::Engine => "/pshr"
+  resources :posts
+  resources :uploads, controller: 'pshr/uploads', defaults: { resource: 'Upload' }
 end
