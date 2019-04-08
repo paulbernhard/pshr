@@ -3,8 +3,8 @@ require 'test_helper'
 class PostTest < ActiveSupport::TestCase
 
   setup do
-    @one = posts(:one)
-    @two = posts(:two)
+    @one = Post.create
+    @two = Post.create
   end
 
   test 'can have uploads' do
@@ -24,6 +24,5 @@ class PostTest < ActiveSupport::TestCase
     one_first_upload.update_attributes(order_position: :last)
     assert_equal @one.uploads.ordered.first, one_last_upload
     assert_equal 0, @two.uploads.first.order
-    debugger
   end
 end
