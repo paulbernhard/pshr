@@ -2,5 +2,15 @@
 
 <%= render 'form', post: @post %>
 
+<h2>Uploads</h2>
+
+<h3>New Upload</h3>
+<%= render 'pshr/uploads/form', upload: @upload %>
+
+<h3>Existing Uploads</h3>
+<% @post.uploads.each do |upload| %>
+  <%= render('pshr/uploads/form', upload: upload) if upload.persisted? %>
+<% end %>
+
 <%= link_to 'Show', @post %> |
 <%= link_to 'Back', posts_path %>

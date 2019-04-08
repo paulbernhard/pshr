@@ -2,47 +2,72 @@ require_dependency "pshr/application_controller"
 
 module Pshr
   class UploadsController < ApplicationController
-    respond_to :json
+    before_action :build_resource
 
     def create
-      @upload = resource.new(resource_params)
+      @upload = @resource.new(resource_params)
       if @upload.save
-        # flash success
-        # render nothing with :created status
+        flash.now[:success] = "Upload was successful."
+        respond_to do |format|
+          format.json { render_resource :created }
+        end
       else
-        # flash error
-        # render upload form partial with :unprocessable_entity status
+        flash.now[:error] = "Upload failed."
+        respond_to do |format|
+          format.json { render_resource :unprocessable_entity }
+        end
       end
     end
 
     def update
-      @upload = resource.find(params[:id])
+      @upload = @resource.find(params[:id])
       if @upload.update_attributes(resource_params)
-        # flash success
-        # render upload form partial with :ok status
+        flash.now[:success] = "Upload was updated."
+        respond_to do |format|
+          format.json { render_resource :ok }
+        end
       else
-        # flash error
-        # render upload form partial with :unprocessable_entity status
+        flash.now[:error] = "Upload update failed."
+        respond_to do |format|
+          format.json { render_resource :unprocessable_entity }
+        end
       end
     end
-
+    #
     def destroy
-      @upload = resource.find(params[:id])
+      @upload = @resource.find(params[:id])
       if @upload.destroy
-        # flash success
-        # render nothing with status :ok
+        flash.now[:error] = "Upload was deleted."
+        @upload = @resource.new
+        respond_to do |format|
+          format.json { render_resource :ok }
+        end
       end
     end
 
     private
 
-      def resource
+      def build_resource
         resource_name = params[:resource]
-        resource_name.capitalize.constantize
+        @resource = resource_name.capitalize.constantize
       end
 
-      def resource_params(resource)
-        params.require(resource.name.to_sym).permit(:uploadable_type, :uploadable_id, :file, metadata: {})
+      def resource_params
+        resource_symbol = params[:resource].downcase.to_sym
+        params.require(resource_symbol).permit(:uploadable_type, :uploadable_id, :file, metadata: {})
+      end
+
+      def render_resource(status)
+        @resource_partial = resource_partial
+        render resource_response, status: status
+      end
+
+      def resource_response
+        'pshr/uploads/form'
+      end
+
+      def resource_partial
+        'pshr/uploads/form'
       end
   end
 end

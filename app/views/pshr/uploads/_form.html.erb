@@ -1,4 +1,8 @@
-<%= form_with(model: Pshr::Upload.new) do |form| %>
-  <%= form.file_field(:file) %>
+<%= form_with model: upload, url: main_app.url_for(upload) do |form| %>
+  <%= form.hidden_field :uploadable_type, value: form.object.uploadable_type %>
+  <%= form.hidden_field :uploadable_id, value: form.object.uploadable_id %>
+
+  <%= form.file_field :file %>
+  
   <%= form.submit "Upload" %>
 <% end %>
