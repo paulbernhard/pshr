@@ -59,7 +59,7 @@ class Post < ApplicationRecord
 end
 ```
 
-## Processing
+## Processing / Versions
 - enable processing in initializer
 - use a global custom processor or a custom processor per model
 - override processing methods `process_image(file)`, etc
@@ -111,6 +111,10 @@ class CustomUpload < ApplicationRecord
             max_file_size: 200.megabytes
 end
 ```
+
+- Versions: Each upload can have multiple versions which can be created during the processing. To save versions instead of one file, return a versions hash from the processing method. See example at `app/uploaders/processors/image.rb` or shrine's [versions plugin doc](https://github.com/shrinerb/shrine/blob/v2.16.0/doc/plugins/versions.md#readme) for more info.
+
+_NOTE: The upload model will keep track of the uploaded file mime-type in the `metadata` column. If you provide versions, the first version file will be used as mime-type. E.g. processing a file to create multiple versions with different formats should return a hash with the file to identify the upload's mime-type first, e.g. `{ mp4: 'video.mp4', mov: 'video.mov', still: 'still.mp4' }`._
 
 ## Usage
 

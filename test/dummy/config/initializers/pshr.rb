@@ -1,4 +1,5 @@
 Pshr.setup do |config|
+
   # base directory for uploads
   # config.uploads_dir = "public"
 
@@ -9,18 +10,20 @@ Pshr.setup do |config|
   # config.uploads_store_prefix = "uploads/store"
 
   # enable processing for image, video, etc
-  # config.image_processing = true
+  # config.image_processing = false
   # config.video_processing = false
 
-  # set a custom processor (you can include Pshr::Processor in your processor)
-  # config.processor = 'Pshr::Processor'
+  # set a custom processor with hash
+  # for example { image: 'Pshr::Processors::Image', video: 'Processors::Video' }
+  # fale disables processing
+  # config.processors = false
 
-  # process files in background job
-  # config.process_in_background = true
+  # process files in background job (requires a redis server and sidekiq!)
+  # config.process_in_background = false
 
-  # validation for allowed filetypes (as array of mime-types)
-  # config.whitelist = %W(image/jpg image/jpeg image/png image/gif video/quicktime video/mp4)
+  # validation for allowed filetypes as array of mime-types (false disables filetype validation)
+  # config.whitelist = false
 
-  # validation for maximum file size (false disables validation)
+  # validation for maximum file size (false disables filesize validation)
   # config.max_file_size = false
 end
