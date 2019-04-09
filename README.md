@@ -58,6 +58,60 @@ class Post < ApplicationRecord
   has_many :uploads, as: :uploadable, class_name: '::Pshr::Upload'
 end
 ```
+- Pshr comes with an `UploadsController` that can be used with any model you plug Pshr to. You can either use `Pshr::UploadsController` directly, inherit from it, or write your own controller. Set the routes in your app:
+```ruby
+# app/config/routes.rb
+resources :uploads, controller: 'pshr/uploads',
+                    defaults: { resource: 'Upload' },
+                    only: [:create, :update, :destroy]
+```
+Set the `resource` in `defaults` to your upload model and set the controller to `pshr/uploads` or your own controller. You can set multiple routes for different upload resources and use your own controllers:
+
+```ruby
+# app/config/routes.rb
+resources :my_uploads, controller: 'pshr/my_uploads',
+                    defaults: { resource: 'MyUpload' },
+                    only: [:create, :update, :destroy]
+
+# app/controllers/my_uploads_controller.rb
+class MyUploadsController < Pshr::UploadsController
+  before_action :authenticate_user!
+end
+```
+
+Pshr comes with an upload form partial. You can use your own form partial be overriding `app/views/pshr/uploads/_form.html.erb` in your app. Or you can specify a partial per controller by overriding the `resource_partial` method and provide your own strong parameters:
+
+```erb
+# app/views/uploads/_my_form.html.erb
+<%= form_with model: upload, url: main_app.url_for(upload) do |form| %>
+  <%= form.hidden_field :uploadable_type, value: form.object.uploadable_type %>
+  <%= form.hidden_field :uploadable_id, value: form.object.uploadable_id %>
+
+  <%= form.file_field :file %>
+
+  <%= form.text_field :caption %>
+
+  <%= form.submit "Upload" %>
+<% end %>
+```
+
+_NOTE: The response expects the local variable `upload` to build the form tag. If you add your own form fields (e.g. `form.text_field :caption`), do not forget to update the controllers strong parameters._
+
+```ruby
+# app/controllers/my_uploads_controller.rb
+class MyUploadsController < Pshr::UploadsController
+
+  private
+
+    def resource_partial
+      'uploads/my_form'
+    end
+
+    def resource_params
+      params.require(@resource.to_s.downcase.to_sym).permit(:uploadable_type, :uploadable_id, :file, :caption)
+    end
+end
+```
 
 ## Processing / Versions
 - enable processing in initializer
@@ -123,6 +177,34 @@ _NOTE: The upload model will keep track of the uploaded file mime-type in the `m
 uploads = Pshr::Upload.ordered # query ordered uploads
 uploads.first.update_attributes(order_position: :last) # change position with integer, :up, :down, :first and :last
 ```
+
+- Metadata: You can use the `metadata` column (jsonb) to provide your custom data (e.g. a caption) with the upload. An easy way to manipulate the `metadata` hash using `serialize` and `store_accessor` in your upload model:
+
+```ruby
+# app/models/my_upload.rb
+class MyUpload < ApplicationRecord
+  include Pshr::Uploadable
+  serialize :metadata
+  store_accessor :metadata, :caption
+end
+```
+
+As the `metadata` column will be serialized and `:caption` is an accessible attribute, the following form will send the params as `upload: { file: …, metadata: { caption: 'my caption…' } }` and populate the `upload` form accordingly.
+
+```erb
+# app/views/uploads/_my_form.html.erb
+<%= form_with model: upload, url: main_app.url_for(upload) do |form| %>
+  <%= form.hidden_field :uploadable_type, value: form.object.uploadable_type %>
+  <%= form.hidden_field :uploadable_id, value: form.object.uploadable_id %>
+
+  <%= form.file_field :file %>
+
+  <%= form.text_field :caption %>
+
+  <%= form.submit "Upload" %>
+<% end %>
+```
+
 
 ## License
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).

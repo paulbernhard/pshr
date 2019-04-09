@@ -49,12 +49,11 @@ module Pshr
 
       def build_resource
         resource_name = params[:resource]
-        @resource = resource_name.capitalize.constantize
+        @resource = resource_name.constantize
       end
 
       def resource_params
-        resource_symbol = params[:resource].downcase.to_sym
-        params.require(resource_symbol).permit(:uploadable_type, :uploadable_id, :file, metadata: {})
+        params.require(@resource.to_s.downcase.to_sym).permit(:uploadable_type, :uploadable_id, :file, metadata: {})
       end
 
       def render_resource(status)

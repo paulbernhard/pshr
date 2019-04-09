@@ -9,4 +9,8 @@ class CustomUpload < ApplicationRecord
   pshr_with processors: { image: 'Processors::CustomImage' },
             whitelist: %W(image/jpeg image/jpg image/png video/mp4),
             max_file_size: 200.kilobytes
+
+  # serialize metadata column to add custom attributes
+  serialize :metadata
+  store_accessor :metadata, :caption
 end

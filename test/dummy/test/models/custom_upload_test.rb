@@ -21,4 +21,11 @@ class CustomUploadTest < ActiveSupport::TestCase
     @upload.save
     assert_equal "image/png", @upload.mime_type
   end
+
+  test 'accesses metadata fields' do
+    caption = "hi there"
+    @upload.caption = caption
+    assert_equal caption, @upload.caption
+    assert_equal caption, @upload.metadata['caption']
+  end
 end
