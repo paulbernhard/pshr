@@ -1,0 +1,30 @@
+<%= content_tag :div, class: 'pshr-uploader', data: { "controller": "pshr-uploader",
+      "pshr-uploader-endpoint": "#{main_app.pshr_path}/endpoint".gsub("//", "/"),
+      "pshr-uploader-max-number-of-files": 1,
+      "pshr-uploader-whitelist": "#{form.object.class.whitelist.blank? ? false : form.object.class.whitelist.join(',')}",
+      "pshr-uploader-max-file-size": form.object.class.max_file_size } do %>
+
+  <%= form.hidden_field :uploadable_type, value: form.object.uploadable_type %>
+  <%= form.hidden_field :uploadable_id, value: form.object.uploadable_id %>
+  <%= form.hidden_field :file, value: nil, data: { "target": "pshr-uploader.file" } %>
+
+  <div class="pshr-uploader__drop" data-target="pshr-uploader.drop">
+    <div class="pshr-uploader__drop__thumb" data-target="pshr-uploader.thumb">
+      <% if form.object.file %>
+        <%= render 'pshr/uploads/thumb', file: form.object.reluctant_file %>
+      <% end %>
+    </div>
+
+    <% if form.object.file %>
+      <div class="pshr-uploader__drop__info">
+        <strong>Type</strong>: <%= form.object.type %><br>
+        <strong>Mime-Type</strong>: <%= form.object.mime_type %><br>
+        <strong>Filename</strong>: <%= form.object.reluctant_file.original_filename %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="pshr-uploader__informer" data-target="pshr-uploader.informer"></div>
+  <div class="pshr-uploader__progress" data-target="pshr-uploader.progress"></div>
+
+<% end %>

@@ -1,0 +1,7 @@
+<% if file.mime_type.include? "image" %>
+  <%= image_tag file.url %>
+<% elsif file.mime_type.include? "video" %>
+  <%= video_tag file.url, preload: "metadata" %>
+<% else %>
+  <span><%= file.mime_type %><br><%= file.original_filename %></span>
+<% end %>

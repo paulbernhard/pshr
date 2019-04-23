@@ -1,0 +1,17 @@
+<%  upload = resource_name.constantize.new
+    upload.uploadable_type = scope.class.name if scope
+    upload.uploadable_id = scope.id if scope %>
+
+<div class="pshr-upload-panel" data-controller="pshr-uploads">
+  <strong>New Upload</strong><br>
+  <div class="pshr-upload-panel__uploader" data-target="pshr-uploads.uploader" data-action="ajax:success->pshr-uploads#add ajax:error->pshr-uploads#reload">
+    <%= render 'pshr/uploads/form', upload: upload, clear_after_submit: true %>
+  </div>
+
+  <strong>Uploads</strong><br>
+  <div class="pshr-upload-panel__uploads" data-target="pshr-uploads.uploads" data-action="ajax:success->pshr-uploads#reload ajax:error->pshr-uploads#reload">
+    <% uploads.ordered.each do |upload| %>
+      <%= render 'pshr/uploads/form', upload: upload %>
+    <% end %>
+  </div>
+</div>

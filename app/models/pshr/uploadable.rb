@@ -7,9 +7,9 @@ module Pshr
     included do
       # include shrine functionality and set defaults
       include Pshr::FileUploader::Attachment.new(:file)
-      # self.pshr_processor = Pshr.processor
-      # self.pshr_whitelist = Pshr.whitelist
-      # self.pshr_max_file_size = Pshr.max_file_size
+      # self.processor = Pshr.processor
+      # self.whitelist = Pshr.whitelist
+      # self.max_file_size = Pshr.max_file_size
 
       # include ranking functionality
       include RankedModel
@@ -26,16 +26,16 @@ module Pshr
 
     class_methods do
       # accessor for custom settings
-      attr_accessor :pshr_processors, :pshr_whitelist, :pshr_max_file_size
+      attr_accessor :processors, :whitelist, :max_file_size
 
       # custom settings for pshr
       # pshr_with(processor: 'Pshr::Processor',
       #           whitelist: %W(image/jpeg, image/png),
       #           max_file_size: 1.megabyte)
       def pshr_with(options = {})
-        self.pshr_processors = options[:processors] if options[:processors]
-        self.pshr_whitelist = options[:whitelist] if options[:whitelist]
-        self.pshr_max_file_size = options[:max_file_size] if options[:max_file_size]
+        self.processors = options[:processors].nil? ? Pshr.processors : options[:processors]
+        self.whitelist = options[:whitelist].nil? ? Pshr.whitelist : options[:whitelist]
+        self.max_file_size = options[:max_file_size].nil? ? Pshr.max_file_size : options[:max_file_size]
       end
     end
 
@@ -44,11 +44,21 @@ module Pshr
     end
 
     def type
-      self.mime_type.split('/')[0]
+      self.mime_type.split('/')[0] if self.mime_type
     end
 
-    def hello
-      puts "hi"
+    def has_versions?
+      self.file.is_a?(Hash) ? true : false
+    end
+
+    # return file even if the upload has multiple versions
+    # optionally a version can be specified
+    def reluctant_file(version = nil)
+      if self.has_versions?
+        version.blank? ? self.file[self.file.keys.first] : self.file[version]
+      else
+        self.file
+      end
     end
 
     private
@@ -64,8 +74,7 @@ module Pshr
       # sync with mime-type of file or first version
       def set_mime_type
         self.metadata = {} if self.metadata.nil?
-        file = self.file.is_a?(Hash) ? self.file[self.file.keys.first] : self.file
-        self.metadata['mime_type'] = file.mime_type
+        self.metadata['mime_type'] = self.reluctant_file.mime_type
       end
   end
 end

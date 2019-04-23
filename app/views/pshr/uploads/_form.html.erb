@@ -1,8 +1,7 @@
 <%= form_with model: upload, url: main_app.url_for(upload) do |form| %>
-  <%= form.hidden_field :uploadable_type, value: form.object.uploadable_type %>
-  <%= form.hidden_field :uploadable_id, value: form.object.uploadable_id %>
 
-  <%= form.file_field :file %>
+  <%= render 'pshr/uploads/fields', form: form %>
 
-  <%= form.submit "Upload" %>
+  <%= form.submit "Save Upload" %>
+  <%= link_to "Delete", main_app.url_for(form.object), method: :delete, remote: true, data: { "action": "ajax:success->pshr-uploads#remove" } if upload.persisted? %>
 <% end %>

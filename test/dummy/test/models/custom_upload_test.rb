@@ -6,7 +6,7 @@ class CustomUploadTest < ActiveSupport::TestCase
     @upload = CustomUpload.new
   end
 
-  test 'is invalid with custom whitelist' do
+  test 'is invalid with blacklisted file' do
     @upload.file = File.open(file_fixture('image.gif'))
     assert_not @upload.valid?
   end

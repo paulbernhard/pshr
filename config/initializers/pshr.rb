@@ -9,10 +9,6 @@ Pshr.setup do |config|
   # prefix for permanent files
   # config.uploads_store_prefix = "uploads/store"
 
-  # enable processing for image, video, etc
-  # config.image_processing = false
-  # config.video_processing = false
-
   # set a custom processor with hash
   # for example { image: 'Pshr::Processors::Image', video: 'Processors::Video' }
   # fale disables processing

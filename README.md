@@ -1,6 +1,10 @@
 # pshr
 An engine for Ruby on Rails to provide polymorphic uploads (using [shrine](https://github.com/shrinerb/shrine)) with file processing and an uploader interface.
 
+## Requirements
+- Rails 5.2.2
+- Webpacker
+
 ## Installation
 Add pshr to your Gemfile…
 
@@ -18,11 +22,12 @@ Or install yourself as:
 $ gem install pshr
 ```
 
-<!-- Install the necessary migrations and migrate:
-```bash
-$ pshr:install:migrations
-$ rails db:migrate
-``` -->
+To use the Oshr upliader UI
+```ruby
+# app/assets/stylesheets/application.css
+*= require pshr/application
+```
+…and copy the js files (webpacker needed)
 
 ## Setup
 
@@ -169,6 +174,14 @@ end
 - Versions: Each upload can have multiple versions which can be created during the processing. To save versions instead of one file, return a versions hash from the processing method. See example at `app/uploaders/processors/image.rb` or shrine's [versions plugin doc](https://github.com/shrinerb/shrine/blob/v2.16.0/doc/plugins/versions.md#readme) for more info.
 
 _NOTE: The upload model will keep track of the uploaded file mime-type in the `metadata` column. If you provide versions, the first version file will be used as mime-type. E.g. processing a file to create multiple versions with different formats should return a hash with the file to identify the upload's mime-type first, e.g. `{ mp4: 'video.mp4', mov: 'video.mov', still: 'still.mp4' }`._
+
+## Uploads Interface
+- requires: webpacker, stimulus
+```bash
+$ yarn add @uppy/core @uppy/xhr-upload @uppy/drag-drop @uppy/progress-bar @uppy/informer
+```
+- copy js folders (as engines do not yet support webpacker)
+- add `javascript_pack_tag 'pshr_application.js'` to `application.html.erb`
 
 ## Usage
 

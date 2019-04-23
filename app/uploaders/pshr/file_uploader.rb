@@ -12,8 +12,8 @@ module Pshr
 
     Attacher.validate do
       # validate with model validation settings
-      whitelist = record.class.pshr_whitelist ? record.class.pshr_whitelist : Pshr.whitelist
-      max_file_size = record.class.pshr_max_file_size ? record.class.pshr_max_file_size : Pshr.max_file_size
+      whitelist = record.class.whitelist
+      max_file_size = record.class.max_file_size
 
       validate_mime_type_inclusion whitelist if whitelist
       validate_max_size max_file_size if max_file_size
@@ -29,7 +29,7 @@ module Pshr
       # conditional processing if processing is enabled for type (image, video, …)
       # using Pshr::Processor or a processor defined by Upload model
       type = io.mime_type.split('/')[0]
-      processors = context[:record].class.pshr_processors ? context[:record].class.pshr_processors : Pshr.processors
+      processors = context[:record].class.processors
       if processors && processors[type.to_sym]
         processor = processors[type.to_sym]
         download_and_process(io, processor)
