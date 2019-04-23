@@ -10,8 +10,10 @@
 
   <strong>Uploads</strong><br>
   <div class="pshr-upload-panel__uploads" data-target="pshr-uploads.uploads" data-action="ajax:success->pshr-uploads#reload ajax:error->pshr-uploads#reload">
-    <% uploads.ordered.each do |upload| %>
-      <%= render 'pshr/uploads/form', upload: upload %>
+    <% if uploads.any? %>
+      <% uploads.ordered.each do |upload| %>
+        <%= render 'pshr/uploads/form', upload: upload %>
+      <% end %>
     <% end %>
   </div>
 </div>

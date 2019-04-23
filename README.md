@@ -182,6 +182,60 @@ $ yarn add @uppy/core @uppy/xhr-upload @uppy/drag-drop @uppy/progress-bar @uppy/
 ```
 - copy js folders (as engines do not yet support webpacker)
 - add `javascript_pack_tag 'pshr_application.js'` to `application.html.erb`
+- the upload panel has an uploader to add uploads to a collection of uploads (optionally within a scope of parent)…
+
+```ruby
+# app/models/post.rb
+class Post < ApplicationRecord
+  has_many :uploads, as: :uploadable, dependent: :destroy
+end
+```
+
+… in your view you can implement the upload panel like:
+
+```html
+<%= pshr_upload_panel(resource_name: 'Upload', scope: @post, uploads: @post.uploads) %>
+```
+
+- you can also use the uploader is form fields in your custom form…
+
+```ruby
+class Upload < ApplicationRecord
+  include Pshr::Uploadable
+end
+```
+
+```html
+<%= form_with model: @upload do |form| %>
+
+  <%= render 'pshr/uploads/fields', form: form %>
+
+  <%= form.submit "Save Upload" %>
+<% end %>
+```
+
+…or for nested attributes
+
+```ruby
+class Post < ApplicationRecord
+  has_one :thumb, as: :uploadable, dependent: :destroy
+  accepts_nested_attributes_for :thumb, allow_destroy: true,
+    reject_if: proc { |attributes| attributes['file'].blank? }
+end
+```
+
+```html
+<%= form_with(model: post, local: true) do |form| %>
+
+  <!-- ... -->
+
+  <%= form.fields_for :thumb do |ff| %>
+    <%= pshr_upload_fields ff %>
+  <% end %>
+
+  <!-- ... -->
+<% end %>
+```
 
 ## Usage
 

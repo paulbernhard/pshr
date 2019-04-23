@@ -26,5 +26,15 @@ module Pshr
       options.merge!({ srcset: srcset }) unless srcset.blank?
       return image_tag(src, options)
     end
+
+    # fields for a nested upload form
+    def pshr_upload_fields(form)
+      render 'pshr/uploads/fields', form: form
+    end
+
+    # upload panel
+    def pshr_upload_panel(resource_name: nil, scope: nil, uploads: nil)
+      render 'pshr/uploads/upload_panel', resource_name: resource_name, scope: scope, uploads: uploads
+    end
   end
 end
