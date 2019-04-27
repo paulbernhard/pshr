@@ -1,3 +1,5 @@
+require 'sidekiq'
+
 module Pshr
   class DeleteJob
     include Sidekiq::Worker
