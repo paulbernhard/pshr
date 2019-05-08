@@ -53,7 +53,7 @@ module Pshr
       end
 
       def resource_params
-        params.require(@resource.to_s.downcase.to_sym).permit(:uploadable_type, :uploadable_id, :file, metadata: {})
+        params.require(@resource.to_s.underscore.to_sym).permit(:uploadable_type, :uploadable_id, :file, metadata: {})
       end
 
       def render_resource(status)

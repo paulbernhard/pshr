@@ -25,7 +25,7 @@ $ gem install pshr
 To use the Oshr upliader UI
 ```ruby
 # app/assets/stylesheets/application.css
-*= require pshr/application
+*= require pshr/styles
 ```
 …and copy the js files (webpacker needed)
 
@@ -178,7 +178,7 @@ _NOTE: The upload model will keep track of the uploaded file mime-type in the `m
 ## Uploads Interface
 - requires: webpacker, stimulus
 ```bash
-$ yarn add @uppy/core @uppy/xhr-upload @uppy/drag-drop @uppy/progress-bar @uppy/informer
+$ yarn add @uppy/core @uppy/xhr-upload @uppy/drag-drop @uppy/informer
 ```
 - copy js folders (as engines do not yet support webpacker)
 - add `javascript_pack_tag 'pshr_application.js'` to `application.html.erb`
@@ -275,3 +275,7 @@ As the `metadata` column will be serialized and `:caption` is an accessible attr
 
 ## License
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+
+## ToDo
+
+- install generator for upload models like `rails g pshr:install:model CustomUpload additional:string` with all the necessary fields and additional fields

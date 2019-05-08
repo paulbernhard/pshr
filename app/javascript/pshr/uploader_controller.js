@@ -3,7 +3,6 @@ import { Controller } from 'stimulus'
 const Uppy = require('@uppy/core')
 const XHRUpload = require('@uppy/xhr-upload')
 const DragDrop = require('@uppy/drag-drop')
-const ProgressBar = require('@uppy/progress-bar')
 const Informer = require('@uppy/informer')
 
 export default class extends Controller {

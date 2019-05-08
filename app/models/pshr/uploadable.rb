@@ -7,35 +7,43 @@ module Pshr
     included do
       # include shrine functionality and set defaults
       include Pshr::FileUploader::Attachment.new(:file)
-      # self.processor = Pshr.processor
-      # self.whitelist = Pshr.whitelist
-      # self.max_file_size = Pshr.max_file_size
 
       # include ranking functionality
       include RankedModel
       ranks :order, with_same: [:uploadable_id, :uploadable_type]
 
+      # associations
       belongs_to :uploadable, polymorphic: true, optional: true
 
+      # validation
       validates :file, presence: true
 
+      # callbacks
       before_save :set_processing_state, :set_mime_type
 
+      # scopes
       scope :ordered, -> { rank(:order) }
+
+      # set class variables (can be overriden by pshr_set)
+      # attr_accessors are set in class_methods
+      @processors = Pshr.processors
+      @whitelist = Pshr.whitelist
+      @max_file_size = Pshr.max_file_size
     end
 
     class_methods do
-      # accessor for custom settings
       attr_accessor :processors, :whitelist, :max_file_size
 
-      # custom settings for pshr
-      # pshr_with(processor: 'Pshr::Processor',
-      #           whitelist: %W(image/jpeg, image/png),
-      #           max_file_size: 1.megabyte)
-      def pshr_with(options = {})
-        self.processors = options[:processors].nil? ? Pshr.processors : options[:processors]
-        self.whitelist = options[:whitelist].nil? ? Pshr.whitelist : options[:whitelist]
-        self.max_file_size = options[:max_file_size].nil? ? Pshr.max_file_size : options[:max_file_size]
+      # set custom settings on per-model-basis
+      # use after including module like:
+      # include Pshr::Uploadable
+      # pshr_set processors: { image: "Processors::CustomImage" },
+      #   whitelist: ["image/jpeg"],
+      #   max_file_size: 5.megabytes
+      def pshr_set(options = {})
+        self.processors = options[:processors] unless options[:processors].nil?
+        self.whitelist = options[:whitelist] unless options[:whitelist].nil?
+        self.max_file_size = options[:max_file_size] unless options[:max_file_size].nil?
       end
     end
 
