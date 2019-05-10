@@ -32,6 +32,11 @@ module Pshr
       render 'pshr/uploads/fields', form: form
     end
 
+    # uploader for singular uploads
+    def pshr_uploader(upload)
+      render 'pshr/uploads/uploader', upload: upload
+    end
+
     # upload panel
     def pshr_upload_panel(resource_name: nil, scope: nil, uploads: nil)
       render 'pshr/uploads/upload_panel', resource_name: resource_name, scope: scope, uploads: uploads

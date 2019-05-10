@@ -10,7 +10,7 @@ class CustomUploadsControllerTest < ActionDispatch::IntegrationTest
     caption = "hi there"
     assert_difference('CustomUpload.count', 1) do
       post  custom_uploads_url,
-            params: { customupload: { file: Rack::Test::UploadedFile.new(@path, 'image/jpeg'),
+            params: { custom_upload: { file: Rack::Test::UploadedFile.new(@path, 'image/jpeg'),
                       metadata: { caption: caption } },
                       format: :json },
             xhr: true

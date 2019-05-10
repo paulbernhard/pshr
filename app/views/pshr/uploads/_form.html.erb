@@ -1,4 +1,4 @@
-<%= form_with model: upload, url: main_app.url_for(upload) do |form| %>
+<%= form_with model: upload, url: main_app.url_for(upload), local: false do |form| %>
 
   <%= render 'pshr/uploads/fields', form: form %>
 

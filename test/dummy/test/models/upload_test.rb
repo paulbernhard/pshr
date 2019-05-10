@@ -34,10 +34,10 @@ class UploadTest < ActiveSupport::TestCase
     first = Upload.ordered.first
     last = Upload.ordered.last
 
-    first.update_attributes(order_position: :down)
+    first.update(order_position: :down)
     assert_equal Upload.ordered.second, first
 
-    last.update_attributes(order_position: :first)
+    last.update(order_position: :first)
     assert_equal Upload.ordered.first, last
   end
 end

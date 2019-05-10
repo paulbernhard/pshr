@@ -19,7 +19,7 @@ class PostTest < ActiveSupport::TestCase
     # changes order of @one.uploads
     one_upload_first = @one.uploads.ordered.first
     one_upload_last = @one.uploads.ordered.last
-    one_upload_first.update_attributes(order_position: :last)
+    one_upload_first.update(order_position: :last)
     assert_equal @one.uploads.ordered.last, one_upload_first
     # leaves order of @two.uploads untouched
     assert_equal 0, @two.uploads.first.order
