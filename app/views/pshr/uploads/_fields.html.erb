@@ -12,6 +12,8 @@
     <div class="pshr-uploader__drop__thumb" data-target="pshr--uploader.thumb">
       <% if form.object.file %>
         <%= render 'pshr/uploads/thumb', file: form.object.reluctant_file %>
+      <% else %>
+        <span>Upload new file…</span>
       <% end %>
     </div>
 

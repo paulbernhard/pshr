@@ -40,7 +40,7 @@ module Pshr
       assert_equal caption, @upload.reload.metadata['caption']
     end
 
-    test 'destroy is success' do
+    test '#destroy is success' do
       @upload = Upload.create(file: File.open(@path))
       assert_difference('Upload.count', -1) do
         delete  upload_url(@upload), params: { format: :json },
@@ -48,6 +48,17 @@ module Pshr
       end
       assert_response :success
       assert_not JSON.parse(response.body)['flashes'].blank?
+      assert_not_nil JSON.parse(response.body)
+    end
+
+    test '#destroy responds with correct resource' do
+      @post = posts(:one)
+      @upload = @post.uploads.build file: Rack::Test::UploadedFile.new(@path, 'image/jpeg')
+      @upload.save
+      delete upload_url(@upload), params: { format: :json }, xhr: true
+      # @post.id should be in the uploadable_id field of response.body
+      json = JSON.parse response.body
+      assert json["html"].include?(@post.id.to_s)
     end
   end
 end
