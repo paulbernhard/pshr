@@ -278,6 +278,6 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## ToDo
 
-- install generator for upload models like `rails g pshr:install:model CustomUpload additional:string` with all the necessary fields and additional fields
+- Install generator for upload models like `rails g pshr:install:model CustomUpload additional:string` with all the necessary fields and additional fields
 
-- Fix "delete" behaviour for singluar uploader. Currently the uploader deletes the record and is removed from the page. It should reload a fresh uploader.
+- Solve implementation of Webpacker in Engine
