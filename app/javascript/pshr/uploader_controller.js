@@ -1,7 +1,7 @@
 import { Controller } from 'stimulus'
 
 const Uppy = require('@uppy/core')
-const XHRUpload = require('@uppy/xhr-upload')
+const Tus = require('@uppy/tus')
 const DragDrop = require('@uppy/drag-drop')
 const Informer = require('@uppy/informer')
 
@@ -9,9 +9,12 @@ export default class extends Controller {
 
   static targets = ['file', 'drop', 'thumb', 'informer', 'progress']
 
+  // TODO add a unique uppy id
+
   // handler when uploader is connected to DOM
   connect() {
     this.uppy = Uppy({
+        id: this.element.id,
         autoProceed: true,
         allowMultipleUploads: true,
         restrictions: {
@@ -23,9 +26,9 @@ export default class extends Controller {
       .use(DragDrop, {
         target: this.dropTarget
       })
-      .use(XHRUpload, {
+      .use(Tus, {
         endpoint: this.data.get('endpoint'),
-        fieldName: 'file'
+        chunkSize: 5*1024*1024
       })
       .use(Informer, {
         target: this.informerTarget
@@ -45,9 +48,26 @@ export default class extends Controller {
     // single upload succeeded
     // update file field for form and preview uploaded file
     this.uppy.on('upload-success', (file, response) => {
-      this.fileTarget.value = JSON.stringify(response.body)
-      this.progressTarget.innerHTML = `### Uploaded ${file.name} ###`
-      this.preview(file)
+      console.log(file, response)
+
+      const fileData = JSON.stringify({
+        id: response.uploadURL,
+        storage: "cache",
+        metadata: {
+          filename: file.name,
+          size: file.size,
+          mime_type: file.type
+        }
+      })
+
+      this.fileTarget.value = fileData
+
+      // TODO enable automatic form submission for uploader
+      if (this.autoSubmit && false) {
+        this.submit()
+      } else {
+        this.preview(file)
+      }
     })
 
     this.element.closest('form').addEventListener('submit', (event) => {
@@ -71,6 +91,7 @@ export default class extends Controller {
 
   // preview the uploaded file in thumb
   preview(file) {
+    this.thumbTarget.innerHTML = `<span>${file.type}<br>${file.name}</span>`
     const url = URL.createObjectURL(file.data)
 
     if (file.type.includes("image")) {
@@ -84,13 +105,14 @@ export default class extends Controller {
 
   // handler to submit the form
   submit() {
-    Rails.fire(this.element, 'submit')
+    const form = this.element.closest("form")
+    Rails.fire(form, "submit")
   }
 
   // reset the uppy instance and progress bar
   reset() {
     this.progressTarget.innerHTML = ""
-    this.thumbTarget.innerHTML = ""
+    this.thumbTarget.innerHTML = "<span>Upload new file…</span>"
     this.uppy.reset()
   }
 
@@ -117,5 +139,10 @@ export default class extends Controller {
   get maxFileSize() {
     const maxFileSize = this.data.get('maxFileSize')
     return maxFileSize != "false" ? parseInt(maxFileSize) : null
+  }
+
+  get autoSubmit() {
+    const autoSubmit = this.data.get("autoSubmit")
+    return autoSubmit == "true" ? true : false
   }
 }

@@ -4,6 +4,6 @@
 
   <%= render 'pshr/uploads/fields', form: form %>
 
-  <%= form.submit "Save Upload" %>
+  <%= form.submit "Upload" %>
   <%= link_to "Delete", main_app.url_for(form.object), method: :delete, remote: true, data: { "action": "ajax:success->pshr--uploads#remove" } if upload.persisted? %>
 <% end %>

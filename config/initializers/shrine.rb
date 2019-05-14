@@ -1,5 +1,6 @@
 require 'shrine'
 require 'shrine/storage/file_system'
+require 'shrine/storage/tus'
 require 'shrine/storage/memory'
 
 if Rails.env.test?
@@ -10,9 +11,14 @@ if Rails.env.test?
 else
   Shrine.storages = {
     cache: Shrine::Storage::FileSystem.new(Pshr.uploads_dir, prefix: Pshr.uploads_cache_prefix),
-    store: Shrine::Storage::FileSystem.new(Pshr.uploads_dir, prefix: Pshr.uploads_store_prefix)
+    store: Shrine::Storage::FileSystem.new(Pshr.uploads_dir, prefix: Pshr.uploads_store_prefix),
+    tus:   Shrine::Storage::Tus.new
   }
 end
+
+Shrine.storages[:cache] = Shrine.storages[:tus]
+
+# TODO remove mattr :uploads_cache_prefix from pshr engine
 
 Shrine.plugin :activerecord # use ActiveRecord
 Shrine.plugin :cached_attachment_data # cache attachment data across request

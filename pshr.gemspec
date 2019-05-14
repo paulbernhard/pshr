@@ -30,9 +30,11 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'jbuilder', '~> 2.8'
   spec.add_dependency 'sass-rails', '~> 5.0', '>= 5.0.7'
 
+  spec.add_dependency 'tus-server', '~> 2.2', '>= 2.2.1' # tus server for resumable file uploads
+
   spec.add_dependency 'shrine', '~> 2.16' # shrine file uploader
   spec.add_dependency 'shrine-memory', '~> 0.3.0' # in-memory storage to speed up upload tests
-  # spec.add_dependency 'mime-types', '~> 3.2', '>= 3.2.2' # better mime-type determination
+  spec.add_dependency 'shrine-tus', '~> 1.2', '>= 1.2.2' # tus filesystems for shrine
   spec.add_dependency 'marcel', '~> 0.3.3' # mime-type determination
 
   spec.add_dependency 'redis', '~> 4.1' # redis memory server for background jobs

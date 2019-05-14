@@ -1,3 +1,4 @@
 Pshr::Engine.routes.draw do
-  mount Pshr::FileUploader.upload_endpoint(:cache) => 'endpoint'
+  # mount Shrine.upload_endpoint(:cache) => 'endpoint'
+  mount Tus::Server => "/files"
 end

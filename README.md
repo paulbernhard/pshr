@@ -178,7 +178,7 @@ _NOTE: The upload model will keep track of the uploaded file mime-type in the `m
 ## Uploads Interface
 - requires: webpacker, stimulus
 ```bash
-$ yarn add @uppy/core @uppy/xhr-upload @uppy/drag-drop @uppy/informer
+$ yarn add @uppy/core @uppy/tus @uppy/drag-drop @uppy/informer
 ```
 - copy js folders (as engines do not yet support webpacker)
 - add `javascript_pack_tag 'pshr_application.js'` to `application.html.erb`

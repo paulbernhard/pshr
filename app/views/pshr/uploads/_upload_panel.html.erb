@@ -4,13 +4,6 @@
 
 <div class="pshr-upload-panel" data-controller="pshr--uploads" data-pshr--uploads-on-remove="delete">
 
-  <div  class="pshr-upload-panel__uploader"
-        data-target="pshr--uploads.uploader"
-        data-action="ajax:success->pshr--uploads#add ajax:error->pshr--uploads#reload">
-
-    <%= render 'pshr/uploads/form', upload: upload %>
-  </div>
-
   <div  class="pshr-upload-panel__uploads"
         data-target="pshr--uploads.uploads"
         data-action="ajax:success->pshr--uploads#reload ajax:error->pshr--uploads#reload">
@@ -20,5 +13,12 @@
         <%= render 'pshr/uploads/form', upload: upload %>
       <% end %>
     <% end %>
+  </div>
+
+  <div  class="pshr-upload-panel__uploader"
+        data-target="pshr--uploads.uploader"
+        data-action="ajax:success->pshr--uploads#add ajax:error->pshr--uploads#reload">
+
+    <%= render 'pshr/uploads/form', upload: upload %>
   </div>
 </div>

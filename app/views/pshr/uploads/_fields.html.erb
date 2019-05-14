@@ -1,8 +1,10 @@
-<%= content_tag :div, class: 'pshr-uploader', data: { "controller": "pshr--uploader",
-      "pshr--uploader-endpoint": "#{main_app.pshr_path.split('?').first}/endpoint".gsub("//", "/"),
+<%= content_tag :div,
+      id: "#{form.object.class.to_s.underscore}_#{form.object.new_record? ? 'new' : form.object.id}", 
+      class: 'pshr-uploader', data: { "controller": "pshr--uploader",
+      "pshr--uploader-endpoint": "#{main_app.pshr_path.split('?').first}/files".gsub("//", "/"),
       "pshr--uploader-max-number-of-files": 1,
       "pshr--uploader-whitelist": "#{form.object.class.whitelist.blank? ? false : form.object.class.whitelist.join(',')}",
-      "pshr--uploader-max-file-size": form.object.class.max_file_size } do %>
+      "pshr--uploader-max-file-size": form.object.class.max_file_size, "pshr--uploader-auto-submit": "true" } do %>
 
   <%= form.hidden_field :uploadable_type, value: form.object.uploadable_type %>
   <%= form.hidden_field :uploadable_id, value: form.object.uploadable_id %>
