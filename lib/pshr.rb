@@ -10,11 +10,8 @@ module Pshr
     mattr_accessor :uploads_dir # upload directory
     self.uploads_dir = "public"
 
-    mattr_accessor :uploads_cache_prefix
-    self.uploads_cache_prefix = "uploads/cache"
-
-    mattr_accessor :uploads_store_prefix
-    self.uploads_store_prefix = "uploads/store"
+    mattr_accessor :uploads_prefix
+    self.uploads_prefix = "uploads"
 
     # mattr_accessor :image_processing, :video_processing
     # self.image_processing = false

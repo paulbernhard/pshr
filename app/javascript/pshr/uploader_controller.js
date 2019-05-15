@@ -9,10 +9,11 @@ export default class extends Controller {
 
   static targets = ['file', 'drop', 'thumb', 'informer', 'progress']
 
-  // TODO add a unique uppy id
-
   // handler when uploader is connected to DOM
   connect() {
+    this.form = this.element.closest('form')
+    this.formSubmit = this.form.querySelector("input[type='submit']")
+
     this.uppy = Uppy({
         id: this.element.id,
         autoProceed: true,
@@ -38,6 +39,7 @@ export default class extends Controller {
     // remove any eventual messages from informer
     this.uppy.on('upload', (data) => {
       this.uppy.info('')
+      this.formSubmit.disabled = true
     })
 
     // update progress bar
@@ -48,8 +50,6 @@ export default class extends Controller {
     // single upload succeeded
     // update file field for form and preview uploaded file
     this.uppy.on('upload-success', (file, response) => {
-      console.log(file, response)
-
       const fileData = JSON.stringify({
         id: response.uploadURL,
         storage: "cache",
@@ -70,7 +70,11 @@ export default class extends Controller {
       }
     })
 
-    this.element.closest('form').addEventListener('submit', (event) => {
+    this.uppy.on("complete", (result) => {
+      this.formSubmit.disabled = false
+    })
+
+    this.form.addEventListener('submit', (event) => {
       this.reset()
     })
   }
@@ -105,8 +109,7 @@ export default class extends Controller {
 
   // handler to submit the form
   submit() {
-    const form = this.element.closest("form")
-    Rails.fire(form, "submit")
+    Rails.fire(this.form, "submit")
   }
 
   // reset the uppy instance and progress bar

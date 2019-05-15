@@ -3,11 +3,8 @@ Pshr.setup do |config|
   # base directory for uploads
   # config.uploads_dir = "public"
 
-  # prefix for temporary files
-  # config.uploads_cache_prefix = "uploads/cache"
-
-  # prefix for permanent files
-  # config.uploads_store_prefix = "uploads/store"
+  # prefix for uploads folder wihtin config.uploads_dir
+  # config.uploads_prefix = "uploads"
 
   # set a custom processor with hash
   # for example { image: 'Pshr::Processors::Image', video: 'Processors::Video' }
