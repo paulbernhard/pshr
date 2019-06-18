@@ -13,7 +13,7 @@ module Pshr
     # returns srcset for [versions] with width
     def pshr_srcset(upload, versions: [])
       if upload.has_versions? && versions.any?
-        return versions.map { |v| "#{file[v].url} #{file[v].metadata['width']}w" }.join(', ')
+        return versions.map { |v| "#{upload.file[v].url} #{upload.file[v].metadata['width']}w" }.join(', ')
       else
         return nil
       end
@@ -21,7 +21,7 @@ module Pshr
 
     # image_tag with srcset (with image widths)
     def pshr_srcset_image_tag(upload, versions: [], default: nil, **options)
-      src = upload.reluctant_file(version)
+      src = upload.reluctant_file(default).url
       srcset = pshr_srcset(upload, versions: versions)
       options.merge!({ srcset: srcset }) unless srcset.blank?
       return image_tag(src, options)
