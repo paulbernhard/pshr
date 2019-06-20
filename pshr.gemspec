@@ -36,6 +36,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'shrine-memory', '~> 0.3.0' # in-memory storage to speed up upload tests
   spec.add_dependency 'shrine-tus', '~> 1.2', '>= 1.2.2' # tus filesystems for shrine
   spec.add_dependency 'marcel', '~> 0.3.3' # mime-type determination
+  spec.add_dependency 'fastimage', '~> 2.1', '>= 2.1.5' # mime-type determination
 
   spec.add_dependency 'redis', '~> 4.1' # redis memory server for background jobs
   spec.add_dependency 'sidekiq', '~> 5.2', '>= 5.2.5' # sidekiq background jobs
