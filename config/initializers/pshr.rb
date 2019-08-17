@@ -1,22 +1,36 @@
 Pshr.setup do |config|
 
-  # base directory for uploads
+  # configuration for the pshr engine
+  # the configuration for processors, whitelist and max_file_size
+  # can be set on a per model basis, using the pshr_set method (see docs)
+
+  # base directory for uploads (string)
   # config.uploads_dir = "public"
 
-  # prefix for uploads folder wihtin config.uploads_dir
+  # prefix for uploads folder wihtin config.uploads_dir (string)
   # config.uploads_prefix = "uploads"
 
-  # set a custom processor with hash
-  # for example { image: 'Pshr::Processors::Image', video: 'Processors::Video' }
-  # fale disables processing
+  # processing on a per-type basis (boolean / hash)
+  # processors = false
+  # disables processing
+  # processors = { image: Processors::Image, video: Processors::Video }
+  # uses custom processors per file type
+  # a processor needs a self.process(file) method
+  # see pshr/app/uploaders/pshr/processors/*.rb for example processors
   # config.processors = false
 
-  # process files in background job (requires a redis server and sidekiq!)
+  # execute file processing in background (boolean)
+  # this requires a runnning sidekiq instance
   # config.process_in_background = false
 
-  # validation for allowed filetypes as array of mime-types (false disables filetype validation)
+  # whitelist for allowed mime-types (array)
+  # false allows all file types
+  # %W(image/jpg image/gif image/png video/mp4)
   # config.whitelist = false
 
-  # validation for maximum file size (false disables filesize validation)
+  # maximum filesize limit in bytes (integer)
+  # false disables limitation
+  # can be set to Rails filesize objects
+  # 1.megabyte, 2.kilobytes, etc.
   # config.max_file_size = false
 end

@@ -15,7 +15,6 @@ else
     tus:   Shrine::Storage::Tus.new
   }
 
-  # use :tus storage as :cache storage
   Shrine.storages[:cache] = Shrine.storages[:tus]
 end
 

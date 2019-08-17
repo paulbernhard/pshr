@@ -69,6 +69,14 @@ module Pshr
       end
     end
 
+    def image
+      self.type == "image" ? true : false
+    end
+
+    def video
+      self.type == "image" ? true : false
+    end
+
     private
 
       def set_processing_state

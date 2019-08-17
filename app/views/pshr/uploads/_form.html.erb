@@ -1,9 +1,11 @@
 <% delete_method = "remove" if local_assigns[:delete_method].nil? %>
 
-<%= form_with model: upload, url: main_app.url_for(upload), local: false do |form| %>
+<%= form_with model: upload, url: main_app.url_for(upload),
+      local: false, class: "pshr-upload-form", data: { id: upload.id } do |form| %>
 
-  <%= render 'pshr/uploads/fields', form: form %>
+  <%= render "pshr/uploads/fields", form: form %>
+  <%= render "pshr/uploads/additional_fields", form: form %>
 
-  <%= form.submit "Upload" %>
-  <%= link_to "Delete", main_app.url_for(form.object), method: :delete, remote: true, data: { "action": "ajax:success->pshr--uploads#remove" } if upload.persisted? %>
+  <%= form.submit "Save Upload", class: "pshr-control" %>
+  <%= link_to "Delete", main_app.url_for(form.object), method: :delete, remote: true, class: "pshr-control", data: { "action": "ajax:success->pshr-uploads#remove" } if upload.persisted? %>
 <% end %>

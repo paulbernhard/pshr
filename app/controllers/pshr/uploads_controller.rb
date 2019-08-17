@@ -4,51 +4,51 @@ module Pshr
   class UploadsController < ApplicationController
     before_action :build_resource
 
-    # create resource
-    # respond with created resource
     def create
       @upload = @resource.new(resource_params)
       if @upload.save
-        flash.now[:success] = "Upload was successful."
+        flash.now[:success] = "Upload was successful"
         respond_to do |format|
           format.json { render_resource :created }
         end
       else
-        flash.now[:error] = "Upload failed."
+        flash.now[:error] = "Upload failed"
         respond_to do |format|
           format.json { render_resource :unprocessable_entity }
         end
       end
     end
 
-    # update resource
-    # respond with updated resource
     def update
       @upload = @resource.find(params[:id])
       if @upload.update(resource_params)
-        flash.now[:success] = "Upload was updated."
+        flash.now[:success] = "Upload was updated"
         respond_to do |format|
           format.json { render_resource :ok }
         end
       else
-        flash.now[:error] = "Upload update failed."
+        flash.now[:error] = "Upload update failed"
         respond_to do |format|
           format.json { render_resource :unprocessable_entity }
         end
       end
     end
 
-    # delete resource
-    # respond with a fresh @resource
     def destroy
       @upload = @resource.find(params[:id])
       if @upload.destroy
-        flash.now[:error] = "Upload was deleted."
+        flash.now[:error] = "Upload was deleted"
         @upload = @resource.new(uploadable_type: @upload.uploadable_type, uploadable_id: @upload.uploadable_id)
         respond_to do |format|
           format.json { render_resource :ok }
         end
       end
+    end
+
+    def sort
+      @upload = Upload.find(params[:id])
+      @upload.update order_position: params[:index]
+      render body: nil
     end
 
     private

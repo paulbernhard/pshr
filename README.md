@@ -32,6 +32,11 @@ To use the Oshr upliader UI
 ## Setup
 
 - initializer with settings…
+- Pshr initializes Shrine using the `Tus` filesystem as cache storage. This is necessary to use Pshr with the frontend file uploader. If file uploads should only be handled programatically, it might be more convenient to use the regular file system as cache. To do so, add an initialzer for Shrine with:
+```ruby
+# config/initialzers/shrine.rb
+Shrine.storages[:cache] = Shrine::Storage::FileSystem.new(Pshr.uploads_dir, prefix: File.join(Pshr.uploads_prefix, "/cache"))
+```
 - Pshr can be used with a model and requires the following columns:
 ```ruby
 class CreateUploads < ActiveRecord::Migration[5.2]
@@ -98,6 +103,14 @@ Pshr comes with an upload form partial. You can use your own form partial be ove
 
   <%= form.submit "Upload" %>
 <% end %>
+```
+
+_NOTE: To add additional form fields to an upload (such as a caption), just override the `pshr/uploads/_additional_fields.html.erb` partial. The partial receives a `form` object and can be used like:_
+
+```erb
+# app/views/pshr/uploads/_additional_fields.html.erb
+<%= form.label :caption, "Caption" %>
+<%= form.text_field :caption %>
 ```
 
 _NOTE: The response expects the local variable `upload` to build the form tag. If you add your own form fields (e.g. `form.text_field :caption`), do not forget to update the controllers strong parameters._
