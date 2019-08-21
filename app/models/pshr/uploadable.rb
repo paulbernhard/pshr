@@ -69,11 +69,11 @@ module Pshr
       end
     end
 
-    def image
+    def image?
       self.type == "image" ? true : false
     end
 
-    def video
+    def video?
       self.type == "image" ? true : false
     end
 
