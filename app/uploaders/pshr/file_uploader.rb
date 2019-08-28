@@ -36,8 +36,6 @@ module Pshr
       else
         io
       end
-      # output = conditional_processing(io, type, processor)
-      # output
     end
 
     private

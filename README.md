@@ -293,4 +293,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 - Install generator for upload models like `rails g pshr:install:model CustomUpload additional:string` with all the necessary fields and additional fields
 
-- Solve implementation of Webpacker in Engine
+- setting upload directory and prefix currently doesn't work
