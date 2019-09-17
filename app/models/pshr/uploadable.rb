@@ -74,7 +74,7 @@ module Pshr
     end
 
     def video?
-      self.type == "image" ? true : false
+      self.type == "video" ? true : false
     end
 
     private
@@ -91,8 +91,6 @@ module Pshr
       def set_mime_type
         self.metadata = {} if self.metadata.nil?
         self.metadata['mime_type'] = self.reluctant_file.mime_type
-        self.file_mime_type = self.metadata['mime_type']
-        # TODO decide if mime_type is set by metadata hash or file_mime_type column
       end
   end
 end

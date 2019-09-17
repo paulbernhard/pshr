@@ -65,15 +65,16 @@ end
 
 ```ruby
 class Post < ApplicationRecord
-  has_many :uploads, as: :uploadable, class_name: '::Pshr::Upload'
+  has_many :uploads, as: :uploadable
 end
 ```
 - Pshr comes with an `UploadsController` that can be used with any model you plug Pshr to. You can either use `Pshr::UploadsController` directly, inherit from it, or write your own controller. Set the routes in your app:
 ```ruby
 # app/config/routes.rb
-resources :uploads, controller: 'pshr/uploads',
-                    defaults: { resource: 'Upload' },
-                    only: [:create, :update, :destroy]
+resources :uploads, controller: 'pshr/uploads', defaults: { resource: 'Upload' },
+  only: [:create, :update, :destroy] do
+    post "sort", on: :member
+end
 ```
 Set the `resource` in `defaults` to your upload model and set the controller to `pshr/uploads` or your own controller. You can set multiple routes for different upload resources and use your own controllers:
 
