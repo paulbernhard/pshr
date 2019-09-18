@@ -22,12 +22,46 @@ Or install yourself as:
 $ gem install pshr
 ```
 
-To use the Oshr upliader UI
-```ruby
-# app/assets/stylesheets/application.css
-*= require pshr/styles
+For all frontend styles and js functionalities you will need to include the npm package `@swrs/pshr-js` and load it in your application.
+
+```bash
+$ yarn add @swrs/pshr-js
 ```
-…and copy the js files (webpacker needed)
+
+```erb
+# app/views/layouts/application.html.erb
+<%= javascript_pack_tag "admin" if skrw_session? %>
+<%= stylesheet_pack_tag "admin" if skrw_session? %>
+```
+
+```js
+// app/javascript/packs/admin.js
+import { Pshr } from "@swrs/pshr-js"
+
+Pshr.start()
+import "@swrs/pshr-js/src/styles/styles.scss"
+```
+
+The `@swrs/pshr-js` is **not precompiled**, so you will have to compile it. With webpacker this can be done easily be excluding all `@swrs/*` packages from babels's default list of ignored packages.
+
+```js
+// config/webpack/environment.js
+// do not exclude @swrs/* packages with Babel to compile them
+const babelLoader = environment.loaders.get('babel')
+babelLoader.exclude = /node_modules\/(?!(@swrs)\/).*/
+```
+
+_NOTE: To develop the @swrs/pshr-js package further, you can link the local package using `yarn link` and add the following setup to webpacker._
+
+```js
+// config/webpack.development.js
+
+// disable resolving of symlinked (yarn link) paths
+environment.config.set("resolve.symlinks", false)
+
+// remove all @swrs/* packages from webpacker dev server ignrored paths
+environment.config.set("devServer.watchOptions.ignored", /node_modules\/(?!@swrs).*/)
+```
 
 ## Setup
 
