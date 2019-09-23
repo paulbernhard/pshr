@@ -9,7 +9,6 @@ class PostTest < ActiveSupport::TestCase
 
   test 'has uploads' do
     @one.uploads.create(file: File.open(file_fixture('image.jpg')))
-    debugger
     assert_equal 1, @one.uploads.size
   end
 

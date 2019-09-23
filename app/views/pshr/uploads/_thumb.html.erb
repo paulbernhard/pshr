@@ -3,5 +3,5 @@
 <% elsif file.mime_type.include? "video" %>
   <%= video_tag file.url, preload: "metadata" %>
 <% else %>
-  <div class="pshr-uploader__drop__thumb__placeholder" data-extension=".<%= file.extension %>"></div>
+  <div class="pshr-upload__placeholder" data-extension=".<%= file.extension %>"></div>
 <% end %>

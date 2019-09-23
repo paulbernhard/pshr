@@ -3,14 +3,8 @@ Rails.application.routes.draw do
 
   resources :posts
 
-  resources :uploads, controller: 'pshr/uploads',
-                      defaults: { resource: 'Upload' },
-                      only: [:create, :update, :destroy]
+  pshr_for :uploads, controller: "pshr/uploads", resource: "Upload"
+  pshr_for :custom_uploads
 
-  resources :custom_uploads, controller: 'custom_uploads',
-                      defaults: { resource: 'CustomUpload' },
-                      only: [:create, :update, :destroy]
-                      
-  # TODO helper for Pshr routes
   root to: 'posts#index'
 end

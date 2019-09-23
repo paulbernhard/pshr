@@ -28,9 +28,10 @@ class UploadTest < ActiveSupport::TestCase
   end
 
   test 'is ranked' do
-    3.times do
+    2.times do
       Upload.create(file: File.open(file_fixture('image.jpg')))
     end
+
     first = Upload.ordered.first
     last = Upload.ordered.last
 

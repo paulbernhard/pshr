@@ -63,15 +63,12 @@ environment.config.set("resolve.symlinks", false)
 environment.config.set("devServer.watchOptions.ignored", /node_modules\/(?!@swrs).*/)
 ```
 
-## Setup
+## Setup / Usage
 
-- initializer with settings…
-- Pshr initializes Shrine using the `Tus` filesystem as cache storage. This is necessary to use Pshr with the frontend file uploader. If file uploads should only be handled programatically, it might be more convenient to use the regular file system as cache. To do so, add an initialzer for Shrine with:
-```ruby
-# config/initialzers/shrine.rb
-Shrine.storages[:cache] = Shrine::Storage::FileSystem.new(Pshr.uploads_dir, prefix: File.join(Pshr.uploads_prefix, "/cache"))
-```
-- Pshr can be used with a model and requires the following columns:
+### Model
+
+Pshr can be hooked into any model and requires the following columns:
+
 ```ruby
 class CreateUploads < ActiveRecord::Migration[5.2]
   def change
@@ -87,13 +84,33 @@ class CreateUploads < ActiveRecord::Migration[5.2]
   end
 end
 ```
+
 ```bash
 $ rails g model Upload file_data:text metadata:jsonb order:integer processing:boolean uploadable:references{polymorphic}
 ```
-- hook `Pshr::Uploadable` into model:
+
+To use Pshr with your model include `Pshr::Uploadable`.
+
 ```ruby
 class Upload < ApplicationRecord
   include Pshr::Uploadable
+end
+```
+
+### Processors & Validations
+
+All upload models will default to settings set by `config/initializers/pshr.rb`. Processors, whitelist and filesize validations can also be configures on a per-model-basis using the `pshr_set` method.
+
+```ruby
+class Upload < ApplicationRecord
+  include Pshr::Uploadable
+
+  # process images using Processors::Image,
+  # whitelist only .jpg, .gif and .png
+  # limit maximum upload file size to 5 megabytes
+  pshr_set processors = { image: Processors::Image },
+    whitelist: %W(image/jpg image/gif image/png),
+    max_file_size: 5.megabytes
 end
 ```
 
@@ -102,6 +119,31 @@ class Post < ApplicationRecord
   has_many :uploads, as: :uploadable
 end
 ```
+
+### Controller / Routes
+
+To use Pshr in your frontend, use `Pshr::UploadsController` or inherit from it. Routes have to be set up using the `pshr_for` routes helper.
+
+```ruby
+# app/controllers/custom_uploads_controller.rb
+class CustomUploadsController < Pshr::UploadsController
+end
+```
+
+```ruby
+# config/routes.rb
+Rails.application.routes.draw do
+  mount Pshr::Engine => "/pshr"
+
+  # pshr routes to use Pshr::UploadsController
+  pshr_for :uploads, controller: "pshr/uploads", resource: "Upload"
+  
+  # pshr routes to use a controller inheriting from Pshr::UploadsController
+  pshr_for :custom_uploads
+end
+
+```
+
 - Pshr comes with an `UploadsController` that can be used with any model you plug Pshr to. You can either use `Pshr::UploadsController` directly, inherit from it, or write your own controller. Set the routes in your app:
 ```ruby
 # app/config/routes.rb
@@ -164,6 +206,13 @@ class MyUploadsController < Pshr::UploadsController
       params.require(@resource.to_s.downcase.to_sym).permit(:uploadable_type, :uploadable_id, :file, :caption)
     end
 end
+```
+
+- By default Pshr initializes Shrine using the `Tus` filesystem as cache storage. This is necessary to use Pshr with the frontend file uploader. If file uploads should only be handled programatically, it might be more convenient to use the regular file system as cache. To do so, add an initialzer for Shrine with:
+
+```ruby
+# config/initialzers/shrine.rb
+Shrine.storages[:cache] = Shrine::Storage::FileSystem.new(Pshr.uploads_dir, prefix: File.join(Pshr.uploads_prefix, "/cache"))
 ```
 
 ## Processing / Versions

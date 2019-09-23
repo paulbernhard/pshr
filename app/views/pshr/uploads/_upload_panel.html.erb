@@ -2,25 +2,21 @@
     upload.uploadable_type = scope.class.name if scope
     upload.uploadable_id = scope.id if scope %>
 
-<div class="pshr-upload-panel" data-controller="pshr-uploads"
-     data-pshr-uploads-on-remove="delete"
-     data-pshr-uploads-url="<%= main_app.url_for(upload) %>">
+<div class="pshr-upload-panel"
+     data-controller="pshr-uploads"
+     data-pshr-uploads-url="<%= main_app.url_for([upload, uploadable_type: upload.uploadable_type, uploadable_id: upload.uploadable_id]) %>"
+     data-pshr-uploads-on-delete="delete">
 
-  <div class="pshr-upload-panel__uploader"
-       data-target="pshr-uploads.uploader"
-       data-action="ajax:success->pshr-uploads#add ajax:error->pshr-uploads#reload">
+  <div data-target="pshr-uploads.uploader"
+       data-action="ajax:success->pshr-uploads#refresh ajax:error->pshr-uploads#reload ajax:success->pshr-uploads#resetUploader">
 
-    <%= render 'pshr/uploads/form', upload: upload %>
+    <%= render 'pshr/uploads/form', upload: upload, auto_submit: true %>
   </div>
 
   <div class="pshr-upload-panel__uploads"
        data-target="pshr-uploads.uploads"
        data-action="ajax:success->pshr-uploads#reload ajax:error->pshr-uploads#reload">
 
-    <% if uploads.any? %>
-      <% uploads.ordered.each do |upload| %>
-        <%= render 'pshr/uploads/form', upload: upload %>
-      <% end %>
-    <% end %>
+    <%= render "pshr/uploads/uploads", uploads: uploads.ordered %>
   </div>
 </div>

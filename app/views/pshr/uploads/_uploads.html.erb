@@ -1,0 +1,5 @@
+<% if uploads.any? %>
+  <% uploads.each do |upload| %>
+    <%= render 'pshr/uploads/upload', upload: upload %>
+  <% end %>
+<% end %>

@@ -62,8 +62,10 @@ module Pshr
     # return file even if the upload has multiple versions
     # optionally a version can be specified
     def reluctant_file(version = nil)
-      if self.has_versions?
-        version.blank? ? self.file[self.file.keys.first] : self.file[version]
+      if self.has_versions? && version.blank?
+        self.file[self.file.keys.first]
+      elsif self.has_versions? && !version.blank?
+        self.file[version].blank? ? self.file[self.file.keys.first] : self.file[version]
       else
         self.file
       end

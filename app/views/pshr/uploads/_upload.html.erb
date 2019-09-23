@@ -1,0 +1,21 @@
+<%= content_tag(:div, class: "pshr-upload",
+  data: { target: "pshr-uploads.item", id: upload.id }) do %>
+
+  <% if upload.file %>
+    <div class="pshr-upload__thumb">
+      <%= render "pshr/uploads/thumb", file: upload.reluctant_file(:thumb) %>
+    </div>
+
+    <div class="pshr-upload__info">
+      <%= upload.reluctant_file.original_filename unless upload.reluctant_file.original_filename.blank? %><br>
+      <%= upload.mime_type unless upload.mime_type.blank? %>
+    </div>
+
+    <div class="pshr-controls">
+      <%= link_to "Edit", main_app.url_for(upload), remote: true,
+        class: "pshr-control", data: { action: "ajax:success->pshr-uploads#reload" } %>
+      <%= link_to "Delete", main_app.url_for(upload), method: :delete, remote: true,
+        class: "pshr-control", data: { "action": "ajax:success->pshr-uploads#delete" } %>
+    </div>
+  <% end %>
+<% end %>

@@ -40,10 +40,12 @@ module Pshr
 
     private
 
+      # download the file and give it to the processor
       def download_and_process(io, processor)
         output = nil
         io.download do |file|
-          output = processor.constantize.process(file)
+          processor = processor.constantize if processor.is_a?(String)
+          output = processor.process(file)
         end
         output
       end

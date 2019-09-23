@@ -1,9 +1,7 @@
-<div class="pshr-uploader"
-     data-controller="pshr-uploads"
+<div data-controller="pshr-uploads"
      data-target="pshr-uploads.uploader"
      data-action="ajax:success->pshr-uploads#reload ajax:error->pshr-uploads#reload"
-     data-pshr-uploads-on-remove="reload">
+     data-pshr-uploads-on-delete="reload">
 
-  <%= render "pshr/uploads/form", upload: upload, delete_method: "reload" %>
-
+  <%= render "pshr/uploads/form", upload: upload %>
 </div>

@@ -1,5 +1,7 @@
 require 'pshr/engine'
+require 'pshr/routes'
 require 'jbuilder'
+
 require 'byebug' if (Rails.env.test? || Rails.env.development?)
 
 module Pshr

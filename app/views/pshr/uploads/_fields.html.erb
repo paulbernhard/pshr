@@ -1,30 +1,35 @@
+<% max_number_of_files = 1 if local_assigns[:max_number_of_files].nil? %>
+<% auto_submit = false if local_assigns[:auto_submit].nil? %>
+
 <%= content_tag :div,
       id: "#{form.object.class.to_s.underscore}_#{form.object.new_record? ? 'new' : form.object.id}",
-      class: 'pshr-uploader', data: { "controller": "pshr-uploader",
-      "pshr-uploader-endpoint": "#{main_app.pshr_path.split('?').first}/files".gsub("//", "/"),
-      "pshr-uploader-max-number-of-files": 1,
-      "pshr-uploader-whitelist": "#{form.object.class.whitelist.blank? ? false : form.object.class.whitelist.join(',')}",
-      "pshr-uploader-max-file-size": form.object.class.max_file_size,
-      "pshr-uploader-auto-submit": "true" } do %>
+      class: "pshr-uploader#{' pshr-uploader--new' if form.object.new_record?}",
+      data: {
+        controller: "pshr-uploader",
+        target: "pshr-uploader.drop",
+        "pshr-uploader-endpoint": "#{main_app.pshr_path.split('?').first}/files".gsub("//", "/"),
+        "pshr-uploader-max-number-of-files": max_number_of_files,
+        "pshr-uploader-whitelist": "#{form.object.class.whitelist.blank? ? false : form.object.class.whitelist.join(',')}",
+        "pshr-uploader-max-file-size": form.object.class.max_file_size,
+        "pshr-uploader-auto-submit": auto_submit
+      } do %>
 
   <%= form.hidden_field :uploadable_type, value: form.object.uploadable_type %>
   <%= form.hidden_field :uploadable_id, value: form.object.uploadable_id %>
   <%= form.hidden_field :file, value: nil, data: { "target": "pshr-uploader.file" } %>
 
-  <div class="pshr-uploader__drop" data-target="pshr-uploader.drop">
-    <div class="pshr-uploader__drop__thumb" data-target="pshr-uploader.thumb">
-      <% if form.object.file %>
-        <%= render 'pshr/uploads/thumb', file: form.object.reluctant_file %>
-      <% else %>
-        New Upload
-      <% end %>
-    </div>
+  <div class="pshr-uploader__thumb" data-target="pshr-uploader.thumb">
+    <%= render "pshr/uploads/thumb", file: form.object.reluctant_file(:thumb) if form.object.file %>
   </div>
 
-  <% if form.object.file %>
-    <div class="pshr-uploader__info">
-      <%= form.object.mime_type %><br>
-      <%= form.object.reluctant_file.original_filename %>
-    </div>
-  <% end %>
+  <div class="pshr-uploader__info" data-target="pshr-uploader.info">
+    <% if form.object.file %>
+      <%= form.object.reluctant_file.original_filename %><br>
+      <%= form.object.mime_type %>
+    <% else %>
+      Upload new file
+      <%= "<br>Allowed types: #{form.object.class.whitelist.join(', ')}".html_safe unless form.object.class.whitelist.blank? %>
+      <%= "<br>Max file size: #{number_to_human_size(form.object.class.max_file_size)}".html_safe unless form.object.class.max_file_size.blank? %>
+    <% end %>
+  </div>
 <% end %>

@@ -1,11 +1,23 @@
-<% delete_method = "remove" if local_assigns[:delete_method].nil? %>
+<% max_number_of_files = 1 if local_assigns[:max_number_of_files].nil? %>
+<% auto_submit = false if local_assigns[:auto_submit].nil? %>
 
 <%= form_with model: upload, url: main_app.url_for(upload),
-      local: false, class: "pshr-upload-form", data: { id: upload.id } do |form| %>
+      local: false, class: "pshr-upload-form",
+      data: { id: upload.id, target: "pshr-uploads.item" } do |form| %>
 
-  <%= render "pshr/uploads/fields", form: form %>
+  <%= render "pshr/uploads/fields", form: form,
+    max_number_of_files: max_number_of_files, auto_submit: auto_submit %>
+
   <%= render "pshr/uploads/additional_fields", form: form %>
 
-  <%= form.submit "Save Upload", class: "pshr-control" %>
-  <%= link_to "Delete", main_app.url_for(form.object), method: :delete, remote: true, class: "pshr-control", data: { "action": "ajax:success->pshr-uploads#remove" } if upload.persisted? %>
+  <div class="pshr-controls">
+    <% if upload.new_record? %>
+      <%= form.submit "Save", class: "pshr-control", disabled: "disabled" %>
+    <% else %>
+      <%= form.submit "Save", class: "pshr-control" %>
+    <% end %>
+
+    <%= link_to "Delete", main_app.url_for(form.object), method: :delete, remote: true,
+      class: "pshr-control", data: { "action": "ajax:success->pshr-uploads#delete" } if upload.persisted? %>
+  </div>
 <% end %>
