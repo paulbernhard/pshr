@@ -23,6 +23,11 @@ module Pshr
       assert_response :success
     end
 
+    test "show is success" do
+      get upload_path(id: @upload.id, params: { format: :json }), xhr: true
+      assert_response :success
+    end
+
     test 'create is success' do
       assert_difference('Upload.count', 1) do
         post uploads_path,
@@ -45,8 +50,8 @@ module Pshr
       assert_not JSON.parse(response.body)['flash'].blank?
     end
 
-    test "show is success" do
-      get upload_path(id: @upload.id, params: { format: :json }), xhr: true
+    test "edit is success" do
+      get edit_upload_path(id: @upload.id, params: { format: :json }), xhr: true
       assert_response :success
     end
 

@@ -17,7 +17,10 @@
       <%= form.submit "Save", class: "pshr-control" %>
     <% end %>
 
-    <%= link_to "Delete", main_app.url_for(form.object), method: :delete, remote: true,
-      class: "pshr-control", data: { "action": "ajax:success->pshr-uploads#delete" } if upload.persisted? %>
+    <%= link_to "Cancel", main_app.url_for(form.object), remote: true, class: "pshr-control",
+      data: { action: "ajax:success->#reload" } if upload.persisted? %>
+
+    <%= link_to "Delete", main_app.url_for(form.object), method: :delete, remote: true, class: "pshr-control",
+      data: { "action": "ajax:success->pshr-uploads#delete" } if upload.persisted? %>
   </div>
 <% end %>

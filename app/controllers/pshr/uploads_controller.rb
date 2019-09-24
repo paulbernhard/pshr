@@ -3,7 +3,7 @@ require_dependency "pshr/application_controller"
 module Pshr
   class UploadsController < ApplicationController
     before_action :build_resource
-    before_action :set_resource, only: [:show, :update]
+    before_action :set_resource, only: [:show, :edit, :update]
 
     def index
       if params[:uploadable_id].nil? && params[:uploadable_type].nil?
@@ -19,7 +19,7 @@ module Pshr
 
     def show
       respond_to do |format|
-        format.json { render_resource "form", :ok }
+        format.json { render_resource "upload", :ok }
       end
     end
 
@@ -35,6 +35,12 @@ module Pshr
         respond_to do |format|
           format.json { render_resource "form", :unprocessable_entity }
         end
+      end
+    end
+
+    def edit
+      respond_to do |format|
+        format.json { render_resource "form", :ok }
       end
     end
 
@@ -55,7 +61,7 @@ module Pshr
         def destroy
       @upload = @resource.find(params[:id])
       if @upload.destroy
-        flash.now[:error] = "Upload was deleted"
+        flash.now[:success] = "Upload was deleted"
         @upload = @resource.new(uploadable_type: @upload.uploadable_type, uploadable_id: @upload.uploadable_id)
         respond_to do |format|
           format.json { render_resource "form", :ok }

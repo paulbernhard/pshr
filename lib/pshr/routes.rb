@@ -8,8 +8,7 @@ class ActionDispatch::Routing::Mapper
     options[:defaults][:format] = :json
 
     resources resources, controller: options[:controller],
-      defaults: options[:defaults],
-      only: [:index, :show, :create, :update, :destroy] do
+      defaults: options[:defaults] do
         post "sort", on: :member
     end
   end
