@@ -37,7 +37,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "fastimage", "~> 2.1", ">= 2.1.5" # mime-type determination
 
   spec.add_dependency "redis", "~> 4.1" # redis memory server for background jobs
-  spec.add_dependency "sidekiq", "~> 5.2", ">= 5.2.5" # sidekiq background jobs
+  spec.add_dependency "sidekiq", ">= 5.2.5", "< 7.0" # sidekiq background jobs
   spec.add_dependency "image_processing", "~> 1.8" # processing wrapper for minimagick/vips
 
   spec.add_dependency "ranked-model", "~> 0.4.4" # ordering of upload records
